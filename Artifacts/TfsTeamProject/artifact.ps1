@@ -11,11 +11,18 @@ Param(
     [string] $versionControlType
 )
 
+function ExecRest($url, $body=$null, $method="GET", $contentType=$null)
+{
+    # Hard coding for first test.
+    $cred = New-Object PSCredential(".\cadull", (ConvertTo-SecureString "P2ssw0rd" -Force -AsPlainText))
+    $result = Invoke-WebRequest -Uri $url -Credential $cred -Method $method -ContentType $contentType -Body $body
+    return ($result.Content | ConvertFrom-Json)
+}
+
 # ============ this is our entry point ==================
 Write-Output "Creating team project $name"
 
-$url = "$tpcUrl/_apis/projects?api-version=2.0"
-$projects = ((Invoke-WebRequest -Uri $url -UseDefaultCredentials).Content | ConvertFrom-Json).value
+$projects = (ExecRest -url "$tpcUrl/_apis/projects?api-version=2.0").value
 
 $projectExists = ($projects -and ($projects | Where-Object { $_.Name -eq $name }))
 if ($projectExists)
@@ -43,19 +50,15 @@ $body = "{
   }
 }"
 
-$url = "$tpcUrl/_apis/projects?api-version=2.0"
-$result = (Invoke-WebRequest -Uri $url -UseDefaultCredentials -Method Post -Body $body -ContentType "application/json")
-$content = ($result.Content | ConvertFrom-Json)
-$projectId = $content.id
+
+$content = ExecRest -url "$tpcUrl/_apis/projects?api-version=2.0" -method "POST" -Body $body -ContentType "application/json"
 $projectState = $content.status
 
 $i = 0
 while($i -lt 360 -and $projectState -ne "WellFormed")
 {
     Sleep -Seconds 1
-    $url = "$tpcUrl/_apis/projects/$($name)?api-version=2.0"
-    $result = (Invoke-WebRequest -Uri $url -UseDefaultCredentials)
-    $content = ($result.Content | ConvertFrom-Json)
+    $content = ExecRest -url "$tpcUrl/_apis/projects/$($name)?api-version=2.0"
     $projectState = $content.state
     $i++
 }
