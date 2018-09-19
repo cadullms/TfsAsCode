@@ -78,29 +78,29 @@ function InstallTfs($installationFolder)
     }
 }
 
+function ExecProcess($toolPath, $argumentList)
+{
+    Write-Output "Starting this command: $toolPath $argumentList"
+    $retCode = Start-Process -FilePath $toolPath -ArgumentList $argumentList -Wait -PassThru
+    if ($retCode.ExitCode -ne 0 -and $retCode.ExitCode -ne 3010) 
+    {
+        Write-Error "Tool failed. Exit code: $($retCode.ExitCode). Command was: $toolPath $argumentList"
+    }
+}
+
 function ConfigureTfs ($TfsToolsDir, $installationFolder)
 {
     Write-Output "Configuring Team Foundation Server $version"
     # https://blogs.msdn.microsoft.com/devops/2012/10/12/unattended-installation-of-team-foundation-server-20122013/
     # https://docs.microsoft.com/en-us/vsts/tfs-server/command-line/tfsconfig-cmd#identities
     
-    $tfsconfigPath = "$TfsToolsDir\tfsconfig.exe"
+    $tfsconfigToolPath = "$TfsToolsDir\tfsconfig.exe"
     
     $argumentList = "unattend /create /type:STANDARD /unattendfile:$installationFolder\standard.ini /inputs:StartTrial=false;IsServiceAccountBuiltIn=True;UseReporting=False;UseWss=False"
-    Write-Output "Starting tfsconfig unattend create with this command: $tfsconfigPath $argumentList"
-    $retCode = Start-Process -FilePath $tfsconfigPath -ArgumentList $argumentList -Wait -PassThru
-    if ($retCode.ExitCode -ne 0 -and $retCode.ExitCode -ne 3010) 
-    {
-        throw "Team Foundation Server configuration failed. Exit code: $($retCode.ExitCode). Command was: $tfsconfigPath $argumentList"
-    }
+    ExecProcess -toolPath $tfsconfigToolPath -argumentList $argumentList
     
     $argumentList = "unattend /configure /unattendfile:$installationFolder\standard.ini /continue"
-    Write-Output "Starting tfsconfig unattend configure with this command: $tfsconfigPath $argumentList"
-    $retCode = Start-Process -FilePath $tfsconfigPath -ArgumentList $argumentList -Wait -PassThru
-    if ($retCode.ExitCode -ne 0 -and $retCode.ExitCode -ne 3010) 
-    {
-        throw "Team Foundation Server configuration failed. Exit code: $($retCode.ExitCode). Command was: $tfsconfigPath $argumentList"
-    }
+    ExecProcess -toolPath $tfsconfigToolPath -argumentList $argumentList
     
     Write-Output "Configured Team Foundation Server $version."
     
@@ -127,12 +127,20 @@ else
 $TfsToolsDir = "C:\Program Files\Microsoft Team Foundation Server 14.0\Tools"
 $TfsWebConfigPath = "C:\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\web.config"
 
-if (-not (Test-Path $TfsToolsDir))     # If that Dir is already there we assume the installation was already successfull
+if (Test-Path $TfsToolsDir)    
+{
+    Write-Output "Team Foundation Server already installed (found $TfsToolsDir)."
+}
+else
 {
     InstallTfs -InstallationFolder $installationFolder 
 }
 
-if (-not (Test-Path $TfsWebConfigPath))
+if (Test-Path $TfsWebConfigPath)
+{
+    Write-Output "Team Foundation Server already configured (found $TfsWebConfigPath)."
+}
+else
 {
     ConfigureTfs -TfsToolsDir $TfsToolsDir -installationFolder $installationFolder
 }
