@@ -1,7 +1,7 @@
 Param(
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [ValidateSet("2015")] 
-    [string] $version
+    [String] $version
 )
 
 function DownloadToFilePath ($downloadUrl, $targetFile)
@@ -9,13 +9,13 @@ function DownloadToFilePath ($downloadUrl, $targetFile)
     Write-Output ("Downloading installation files from URL: $downloadUrl to $targetFile")
     $targetFolder = Split-Path $targetFile
 
-    if((Test-Path -path $targetFile))
+    if ((Test-Path -path $targetFile))
     {
         Write-Output "Deleting old target file $targetFile"
         Remove-Item $targetFile -Force | Out-Null
     }
 
-    if(-not (Test-Path -path $targetFolder))
+    if (-not (Test-Path -path $targetFolder))
     {
         Write-Output "Creating folder $targetFolder"
         New-Item -ItemType Directory -Force -Path $targetFolder | Out-Null
@@ -30,23 +30,25 @@ function DownloadToFilePath ($downloadUrl, $targetFile)
         try
         {
             $WebClient = New-Object System.Net.WebClient
-            $WebClient.DownloadFile($downloadUrl,$targetFile)
+            $WebClient.DownloadFile($downloadUrl, $targetFile)
             break
         }
         catch
         {
             Write-Output "Caught exception during download..."
-            if ($_.Exception.InnerException){
+            if ($_.Exception.InnerException)
+            {
                 Write-Output "InnerException: $($_.InnerException.Message)"
             }
-            else {
+            else
+            {
                 Write-Output "Exception: $($_.Exception.Message)"
             }
         }
 
     } while ($downloadAttempts -lt 5)
 
-    if($downloadAttempts -eq 5)
+    if ($downloadAttempts -eq 5)
     {
         Write-Error "Download of $downloadUrl failed repeatedly. Giving up."
     }
@@ -62,7 +64,7 @@ function InstallTfs($installationFolder)
 
     if ($retCode.ExitCode -ne 0 -and $retCode.ExitCode -ne 3010)
     {
-        if($version -eq '2017')
+        if ($version -eq '2017')
         {
             $targetLogs = 'c:\VS2017Logs'
             New-Item -ItemType Directory -Force -Path $targetLogs | Out-Null
@@ -78,6 +80,17 @@ function InstallTfs($installationFolder)
     }
 }
 
+function GrantBuiltInAccountsSysAdminPrivileges()
+{
+    # Hard coding for first test.
+    $cred = New-Object PSCredential(".\cadull", (ConvertTo-SecureString "P2ssw0rd" -Force -AsPlainText))
+    $sqlScript = "CREATE LOGIN [NT AUTHORITY\Network Service] FROM WINDOWS;
+                  ALTER SERVER ROLE [SysAdmin] ADD MEMBER [NT AUTHORITY\Network Service];
+                  CREATE LOGIN [NT AUTHORITY\Local Service] FROM WINDOWS;
+                  ALTER SERVER ROLE [SysAdmin] ADD MEMBER [NT AUTHORITY\Local Service];"
+    Invoke-Command -ComputerName . -HideComputerName -Credential $cred -ScriptBlock {param ($sqlScript) invoke-sqlcmd -server . -Query $sqlScript} -ArgumentList $sqlScript
+}
+
 function ExecProcess($toolPath, $argumentList)
 {
     Write-Output "Starting this command: $toolPath $argumentList"
@@ -91,11 +104,14 @@ function ExecProcess($toolPath, $argumentList)
 function ConfigureTfs ($TfsToolsDir, $installationFolder)
 {
     Write-Output "Configuring Team Foundation Server $version"
-    # https://blogs.msdn.microsoft.com/devops/2012/10/12/unattended-installation-of-team-foundation-server-20122013/
-    # https://docs.microsoft.com/en-us/vsts/tfs-server/command-line/tfsconfig-cmd#identities
-    
+
+    GrantBuiltInAccountsSysAdminPrivileges
+
     $tfsconfigToolPath = "$TfsToolsDir\tfsconfig.exe"
     
+    Write-Output "On failure, logs will be saved at C:\ProgramData\Microsoft\Team Foundation\Server Configuration\Logs"
+
+    # https://blogs.msdn.microsoft.com/devops/2012/10/12/unattended-installation-of-team-foundation-server-20122013/
     $argumentList = "unattend /create /type:STANDARD /unattendfile:$installationFolder\standard.ini /inputs:StartTrial=false;IsServiceAccountBuiltIn=True;UseReporting=False;UseWss=False"
     ExecProcess -toolPath $tfsconfigToolPath -argumentList $argumentList
     
@@ -103,7 +119,6 @@ function ConfigureTfs ($TfsToolsDir, $installationFolder)
     ExecProcess -toolPath $tfsconfigToolPath -argumentList $argumentList
     
     Write-Output "Configured Team Foundation Server $version."
-    
 }
 
 # ============ this is our entry point ==================
@@ -111,7 +126,7 @@ function ConfigureTfs ($TfsToolsDir, $installationFolder)
 Write-Output "Installing Team Foundation Server $version"
 $installationFolder = Join-path -path $env:ProgramData -childPath "DTLArt_TFS"
 
-if($version -eq '2015' )
+if ($version -eq '2015' )
 {
     $tfsInstallLog = Join-Path $installationFolder "TFSInstall.log"
     $argumentList = "/Quiet /Log $tfsInstallLog"
