@@ -130,9 +130,9 @@ if (-not (Test-Path $TfsToolsDir))     # If that Dir is already there we assume 
     InstallTfs -InstallationFolder $installationFolder 
 }
 
-$TfsAtDir = "C:\Program Files\Microsoft Team Foundation Server 14.0\Application Tier"
+$TfsWebConfigPath = "C:\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\web.config"
 
-if (-not (Test-Path $TfsAtDir))
+if (-not (Test-Path $TfsWebConfigPath))
 {
     ConfigureTfs -TfsToolsDir $TfsToolsDir
 }
