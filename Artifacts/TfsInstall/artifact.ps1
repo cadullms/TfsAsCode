@@ -122,15 +122,15 @@ else
     Write-Error "Version is not recognized - allowed value is 2015. Specified value: $version"
 }
 
-
+# TODO: Find these paths dynamically with 
+# (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\TeamFoundationServer\14.0" -Name "InstallPath").InstallPath
 $TfsToolsDir = "C:\Program Files\Microsoft Team Foundation Server 14.0\Tools"
+$TfsWebConfigPath = "C:\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\web.config"
 
 if (-not (Test-Path $TfsToolsDir))     # If that Dir is already there we assume the installation was already successfull
 {
     InstallTfs -InstallationFolder $installationFolder 
 }
-
-$TfsWebConfigPath = "C:\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\web.config"
 
 if (-not (Test-Path $TfsWebConfigPath))
 {
