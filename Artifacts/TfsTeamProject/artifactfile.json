@@ -41,7 +41,7 @@
           "TFVC",
           "Git"
         ],
-        "defaultValue": "git"
+        "defaultValue": "Git"
       }
     },
     "runCommand": {
