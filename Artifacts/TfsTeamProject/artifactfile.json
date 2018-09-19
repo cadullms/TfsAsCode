@@ -45,6 +45,6 @@
       }
     },
     "runCommand": {
-      "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./artifact-main.ps1 -version ''', parameters('version'), '''', '\"')]"
+      "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./artifact-main.ps1 -tpcUrl ''', parameters('tpcUrl'), '''', ' -name ''', parameters('name') , '''' , ' -processTemplate ''', parameters('processTemplate') , '''' , ' -versionControlType ''', parameters('versionControlType') , '''' , '\"')]"
     }
 }
