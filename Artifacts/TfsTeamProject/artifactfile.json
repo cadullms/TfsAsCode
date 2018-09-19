@@ -1,0 +1,50 @@
+{
+    "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2016-11-28/dtlArtifacts.json",
+    "title": "Team Foundation Server Team Project",
+    "description": "Creates a TFS team project. If a project with the same name already exists, does nothing.",
+    "publisher": "Microsoft Premier Services",
+    "tags": [
+      "Windows"
+    ],
+    "iconUri": "https://www.visualstudio.com/wp-content/uploads/2017/11/microsoft-visual-studio.svg",
+    "targetOsType": "Windows",
+    "parameters": {
+      "tpcUrl": {
+        "type": "string",
+        "displayName": "Team Project Collection URL",
+        "description": "The URL of the Team Project Collection in which to create the team project, e.g. \"https://myTfs/DefaultCollection\"",
+        "allowEmpty": false,
+        "defaultValue": "http://localhost:8080/tfs/DefaultCollection"
+      },
+      "name": {
+        "type": "string",
+        "displayName": "Name",
+        "description": "The name for the team project",
+        "allowEmpty": false
+      },
+      "processTemplate": {
+        "type": "string",
+        "displayName": "Process Template",
+        "description": "The process template for the team project",
+        "allowedValues": [
+          "Scrum",
+          "Agile",
+          "CMMI"
+        ],
+        "defaultValue": "Scrum"
+      },
+      "versionControlType":{
+        "type": "string",
+        "displayName": "Version Control Type.",
+        "description": "Whether the first repo in the team project should be TFVC or git.",
+        "allowedValues": [
+          "TFVC",
+          "Git"
+        ],
+        "defaultValue": "git"
+      }
+    },
+    "runCommand": {
+      "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./artifact-main.ps1 -version ''', parameters('version'), '''', '\"')]"
+    }
+}
