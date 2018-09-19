@@ -78,7 +78,7 @@ function InstallTfs($installationFolder)
     }
 }
 
-function ConfigureTfs ($TfsToolsDir)
+function ConfigureTfs ($TfsToolsDir, $installationFolder)
 {
     Write-Output "Configuring Team Foundation Server $version"
     # https://blogs.msdn.microsoft.com/devops/2012/10/12/unattended-installation-of-team-foundation-server-20122013/
@@ -86,7 +86,7 @@ function ConfigureTfs ($TfsToolsDir)
     
     $tfsconfigPath = "$TfsToolsDir\tfsconfig.exe"
     
-    $argumentList = "unattend /create /type:STANDARD /unattendfile:$logFolder\standard.ini /inputs:StartTrial=false;IsServiceAccountBuiltIn=True;UseReporting=False;UseWss=False"
+    $argumentList = "unattend /create /type:STANDARD /unattendfile:$installationFolder\standard.ini /inputs:StartTrial=false;IsServiceAccountBuiltIn=True;UseReporting=False;UseWss=False"
     Write-Output "Starting tfsconfig unattend create with this command: $tfsconfigPath $argumentList"
     $retCode = Start-Process -FilePath $tfsconfigPath -ArgumentList $argumentList -Wait -PassThru
     if ($retCode.ExitCode -ne 0 -and $retCode.ExitCode -ne 3010) 
@@ -94,7 +94,7 @@ function ConfigureTfs ($TfsToolsDir)
         throw "Team Foundation Server configuration failed. Exit code: $($retCode.ExitCode). Command was: $tfsconfigPath $argumentList"
     }
     
-    $argumentList = "unattend /configure /unattendfile:$logFolder\standard.ini /continue"
+    $argumentList = "unattend /configure /unattendfile:$installationFolder\standard.ini /continue"
     Write-Output "Starting tfsconfig unattend configure with this command: $tfsconfigPath $argumentList"
     $retCode = Start-Process -FilePath $tfsconfigPath -ArgumentList $argumentList -Wait -PassThru
     if ($retCode.ExitCode -ne 0 -and $retCode.ExitCode -ne 3010) 
@@ -134,5 +134,5 @@ if (-not (Test-Path $TfsToolsDir))     # If that Dir is already there we assume 
 
 if (-not (Test-Path $TfsWebConfigPath))
 {
-    ConfigureTfs -TfsToolsDir $TfsToolsDir
+    ConfigureTfs -TfsToolsDir $TfsToolsDir -installationFolder $installationFolder
 }
