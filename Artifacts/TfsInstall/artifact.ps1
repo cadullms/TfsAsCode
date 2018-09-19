@@ -95,9 +95,24 @@ Write-Output "Configuring Team Foundation Server $version"
 # https://blogs.msdn.microsoft.com/devops/2012/10/12/unattended-installation-of-team-foundation-server-20122013/
 # https://docs.microsoft.com/en-us/vsts/tfs-server/command-line/tfsconfig-cmd#identities
 
-$TfsToolsDir ="C:\Program Files\Microsoft Team Foundation Server 14.0\Tools"
-& "$TfsToolsDir\tfsconfig.exe" unattend /create /type:STANDARD /unattendfile:$logFolder\standard.ini "/inputs:StartTrial=false;IsServiceAccountBuiltIn=False;UseReporting=False;UseWss=False"
-& "$TfsToolsDir\tfsconfig.exe" unattend /configure /unattendfile:$logFolder\standard.ini /continue
+$tfsconfigPath = "$TfsToolsDir\tfsconfig.exe"
+$TfsToolsDir = "C:\Program Files\Microsoft Team Foundation Server 14.0\Tools"
 
-Write-Output "Configured Team Foundation Server $version. I guess. We will need to check the exit code here and stuff, but I need some food first, gonna let this run during lunch break..."
+Write-Output "Starting tfsconfig unattend create with this command: $tfsconfigPath $argumentList"
+$argumentList = "unattend /create /type:STANDARD /unattendfile:$logFolder\standard.ini /inputs:StartTrial=false;IsServiceAccountBuiltIn=True;UseReporting=False;UseWss=False"
+$retCode = Start-Process -FilePath $tfsconfigPath -ArgumentList $argumentList -Wait -PassThru
+if ($retCode.ExitCode -ne 0 -and $retCode.ExitCode -ne 3010) 
+{
+    throw "Team Foundation Server configuration failed. Exit code: $($retCode.ExitCode). Command was: $tfsconfigPath $argumentList"
+}
+
+Write-Output "Starting tfsconfig unattend configure with this command: $tfsconfigPath $argumentList"
+$argumentList = "unattend /configure /unattendfile:$logFolder\standard.ini /continue"
+$retCode = Start-Process -FilePath $tfsconfigPath -ArgumentList $argumentList -Wait -PassThru
+if ($retCode.ExitCode -ne 0 -and $retCode.ExitCode -ne 3010) 
+{
+    throw "Team Foundation Server configuration failed. Exit code: $($retCode.ExitCode). Command was: $tfsconfigPath $argumentList"
+}
+
+Write-Output "Configured Team Foundation Server $version."
 
