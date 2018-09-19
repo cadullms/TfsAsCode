@@ -147,7 +147,7 @@ if ($version -eq '2015' )
 {
     $tfsInstallLog = Join-Path $installationFolder "TFSInstall.log"
     $argumentList = "/Quiet /Log $tfsInstallLog"
-    $downloadUrl = 'https://download.my.visualstudio.com/db/en_team_foundation_server_express_2015_update_4_x86_x64_web_installer_11701809.exe?t=04011165-51a9-407e-ac68-462d80685ed2&e=1537400301&h=0715ecd3ddbd2c2fdd5162a2fbc8f2f6&su=1'
+    $downloadUrl = 'https://download.microsoft.com/download/D/5/5/D55B3B8C-A270-495F-BEF9-846AB05F294B/tfs_server.exe'
 }
 else
 {
