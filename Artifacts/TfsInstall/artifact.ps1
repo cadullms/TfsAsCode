@@ -80,15 +80,32 @@ function InstallTfs($installationFolder)
     }
 }
 
-function GrantBuiltInAccountsSysAdminPrivileges()
+function ExecuteSql($sql)
 {
     # Hard coding for first test.
     $cred = New-Object PSCredential(".\cadull", (ConvertTo-SecureString "P2ssw0rd" -Force -AsPlainText))
-    $sqlScript = "CREATE LOGIN [NT AUTHORITY\Network Service] FROM WINDOWS;
-                  ALTER SERVER ROLE [SysAdmin] ADD MEMBER [NT AUTHORITY\Network Service];
-                  CREATE LOGIN [NT AUTHORITY\Local Service] FROM WINDOWS;
-                  ALTER SERVER ROLE [SysAdmin] ADD MEMBER [NT AUTHORITY\Local Service];"
-    Invoke-Command -ComputerName . -HideComputerName -Credential $cred -ScriptBlock {param ($sqlScript) invoke-sqlcmd -server . -Query $sqlScript} -ArgumentList $sqlScript
+    return Invoke-Command -ComputerName . -HideComputerName -Credential $cred -ScriptBlock {param ($sql) invoke-sqlcmd -server . -Query $sql} -ArgumentList $sql
+}
+
+function GrantSysAdminRole([String] $accountName)
+{
+    $existingLogins = ExecuteSql -sql "SELECT Name, SysAdmin FROM sys.syslogins where name = '$accountName'"
+    if (-not $existingLogins -or $existingLogins.Count -eq 0)
+    {
+        ExecuteSql -sql "CREATE LOGIN [$accountName] FROM WINDOWS; ALTER SERVER ROLE [SysAdmin] ADD MEMBER [$accountName];"
+    }
+    elseif ($existingLogins.SysAdmin -eq 0) 
+    {
+        ExecuteSql -sql "ALTER SERVER ROLE [SysAdmin] ADD MEMBER [$accountName];"
+    }
+}
+
+function GrantBuiltInAccountsSysAdminPrivileges()
+{
+    foreach ($systemAccount in @("NT AUTHORITY\Network Service","NT AUTHORITY\Local Service","NT AUTHORITY\System"))
+    {
+        GrantSysAdminRole -accountName $systemAccount
+    }
 }
 
 function ExecProcess($toolPath, $argumentList)
