@@ -15,7 +15,7 @@ function ExecRest($url, $body=$null, $method="GET", $contentType=$null)
 {
     # Hard coding for first test.
     $cred = New-Object PSCredential(".\cadull", (ConvertTo-SecureString "P2ssw0rd" -Force -AsPlainText))
-    $result = Invoke-WebRequest -Uri $url -Credential $cred -Method $method -ContentType $contentType -Body $body
+    $result = Invoke-WebRequest -Uri $url -Credential $cred -Method $method -ContentType $contentType -Body $body -UseBasicParsing #We should probably switch to Invoke-RestMethod here...
     return ($result.Content | ConvertFrom-Json)
 }
 
