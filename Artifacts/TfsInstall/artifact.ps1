@@ -147,7 +147,7 @@ if ($version -eq '2015' )
 {
     $tfsInstallLog = Join-Path $installationFolder "TFSInstall.log"
     $argumentList = "/Quiet /Log $tfsInstallLog"
-    $downloadUrl = 'https://download.microsoft.com/download/D/5/5/D55B3B8C-A270-495F-BEF9-846AB05F294B/tfs_server.exe'
+    $downloadUrl = 'https://go.microsoft.com/fwlink/?LinkId=844068' #should be 2015 Update 4.1
 }
 else
 {
