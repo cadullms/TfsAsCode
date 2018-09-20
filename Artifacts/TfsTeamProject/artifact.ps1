@@ -8,13 +8,16 @@ Param(
     [string] $processTemplate,
     [Parameter(Mandatory=$true)]
     [ValidateSet("Git","TFVC")]
-    [string] $versionControlType
+    [string] $versionControlType,
+    [Parameter(Mandatory=$true)]
+    [String] $tfsUsername,
+    [Parameter(Mandatory=$true)]
+    [String] $tfsPassword #TODO: I got this from https://github.com/Azure/azure-devtestlab/blob/2a670c730def9fd63b0a7c6fda9301b473b04e92/Artifacts/windows-vsts-build-agent/vsts-agent-install.ps1, but it would be better to find an option with end-to-end-encryption
 )
 
 function ExecRest($url, $body=$null, $method="GET", $contentType=$null)
 {
-    # Hard coding for first test.
-    $cred = New-Object PSCredential(".\cadull", (ConvertTo-SecureString "P2ssw0rd" -Force -AsPlainText))
+    $cred = New-Object PSCredential($tfsUsername, (ConvertTo-SecureString $tfsPassword -Force -AsPlainText))
     $result = Invoke-WebRequest -Uri $url -Credential $cred -Method $method -ContentType $contentType -Body $body -UseBasicParsing #We should probably switch to Invoke-RestMethod here...
     return ($result.Content | ConvertFrom-Json)
 }

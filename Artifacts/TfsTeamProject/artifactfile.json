@@ -42,9 +42,24 @@
           "Git"
         ],
         "defaultValue": "Git"
+      },
+      "tfsUsername":
+      {
+        "type": "string",
+        "displayName": "TFS Username",
+        "description": "The username of an account that can log on to this machine and that has permissions in TFS to create a team project. In DTL this is typically the admin user you specify for machine creation.",
+        "allowEmpty": false
+      },
+      "tfsPassword":
+      {
+        "type": "securestring",
+        "displayName": "TFS Password",
+        "description": "The password of an account that can log on to this machine and that has permissions in TFS to create a team project. In DTL this is typically the admin user you specify for machine creation.",
+        "allowEmpty": false,
+        "controlType": "passwordBox"
       }
     },
     "runCommand": {
-      "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./artifact-main.ps1 -tpcUrl ''', parameters('tpcUrl'), '''', ' -name ''', parameters('name') , '''' , ' -processTemplate ''', parameters('processTemplate') , '''' , ' -versionControlType ''', parameters('versionControlType') , '''' , '\"')]"
+      "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./artifact-main.ps1 -tpcUrl ''', parameters('tpcUrl'), '''', ' -name ''', parameters('name') , '''' , ' -processTemplate ''', parameters('processTemplate') , '''' , ' -versionControlType ''', parameters('versionControlType') , '''', ' -adminUsername ''', parameters('adminUsername'), '''', ' -tfsPassword ''', parameters('tfsPassword'), '''' , '\"')]"
     }
 }

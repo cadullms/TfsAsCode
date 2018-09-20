@@ -16,9 +16,24 @@
         "allowedValues": [
           "2015"
         ]
+      },
+      "adminUsername":
+      {
+        "type": "string",
+        "displayName": "Admin Username",
+        "description": "The username of a local admin account that as well has sysadmin permissions for the local SQL Server instance. In DTL this is typically the admin user you specify for machine creation.",
+        "allowEmpty": false
+      },
+      "adminPassword":
+      {
+        "type": "securestring",
+        "displayName": "Admin Password",
+        "description": "The password of a local admin account that as well has sysadmin permissions for the local SQL Server instance. In DTL this is typically the admin user you specify for machine creation.",
+        "allowEmpty": false,
+        "controlType": "passwordBox"
       }
     },
     "runCommand": {
-      "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./artifact-main.ps1 -version ''', parameters('version'), '''', '\"')]"
+      "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./artifact-main.ps1 -version ''', parameters('version'), '''', ' -adminUsername ''', parameters('adminUsername'), '''', ' -adminPassword ''', parameters('adminPassword'), '''','\"')]"
     }
 }
