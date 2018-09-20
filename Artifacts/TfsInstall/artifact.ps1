@@ -143,6 +143,11 @@ function ConfigureTfs ($TfsToolsDir, $installationFolder)
 
 # ============ this is our entry point ==================
 
+if ($tfsUsername -notmatch ".+\\.+") 
+{
+    Write-Error "Account name $tfsUsername does not contain a domain. Domain is required for the name (in form '<domain>\<accountname>'), for local accounts use '.' (e.g. '.\vmuser')."
+}
+
 Write-Output "Installing Team Foundation Server $version"
 $installationFolder = Join-path -path $env:ProgramData -childPath "DTLArt_TFS"
 

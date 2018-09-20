@@ -23,6 +23,12 @@ function ExecRest($url, $body=$null, $method="GET", $contentType=$null)
 }
 
 # ============ this is our entry point ==================
+
+if ($tfsUsername -notmatch ".+\\.+") 
+{
+    Write-Error "Account name $tfsUsername does not contain a domain. Domain is required for the name (in form '<domain>\<accountname>'), for local accounts use '.' (e.g. '.\vmuser')."
+}
+
 Write-Output "Creating team project $name"
 
 $projects = (ExecRest -url "$tpcUrl/_apis/projects?api-version=2.0").value

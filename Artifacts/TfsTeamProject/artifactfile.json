@@ -47,19 +47,19 @@
       {
         "type": "string",
         "displayName": "TFS Username",
-        "description": "The username of an account that can log on to this machine and that has permissions in TFS to create a team project. In DTL this is typically the admin user you specify for machine creation.",
+        "description": "The username (with mandatory domain: <domain>\\<username>, for local accounts use . or machine name as domain) of an account that can log on to this machine and that has permissions in TFS to create a team project. In DevTest Labs this is typically the admin user you specify for machine creation (e.g. '.\\vmuser').",
         "allowEmpty": false
       },
       "tfsPassword":
       {
         "type": "securestring",
         "displayName": "TFS Password",
-        "description": "The password of an account that can log on to this machine and that has permissions in TFS to create a team project. In DTL this is typically the admin user you specify for machine creation.",
+        "description": "The password for the TFS Username.",
         "allowEmpty": false,
         "controlType": "passwordBox"
       }
     },
     "runCommand": {
-      "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./artifact-main.ps1 -tpcUrl ''', parameters('tpcUrl'), '''', ' -name ''', parameters('name') , '''' , ' -processTemplate ''', parameters('processTemplate') , '''' , ' -versionControlType ''', parameters('versionControlType') , '''', ' -adminUsername ''', parameters('adminUsername'), '''', ' -tfsPassword ''', parameters('tfsPassword'), '''' , '\"')]"
+      "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./artifact-main.ps1 -tpcUrl ''', parameters('tpcUrl'), '''', ' -name ''', parameters('name') , '''' , ' -processTemplate ''', parameters('processTemplate') , '''' , ' -versionControlType ''', parameters('versionControlType') , '''', ' -tfsUsername ''', parameters('tfsUsername'), '''', ' -tfsPassword ''', parameters('tfsPassword'), '''' , '\"')]"
     }
 }

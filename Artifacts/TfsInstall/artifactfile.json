@@ -21,14 +21,14 @@
       {
         "type": "string",
         "displayName": "Admin Username",
-        "description": "The username of a local admin account that as well has sysadmin permissions for the local SQL Server instance. In DTL this is typically the admin user you specify for machine creation.",
+        "description": "The username (with mandatory domain: <domain>\\<username>, for local accounts use . or machine name as domain) of a local admin account that as well has sysadmin permissions for the local SQL Server instance. In DevTest Labs this is typically the admin user you specify at machine creation (e.g. '.\\vmuser').",
         "allowEmpty": false
       },
       "adminPassword":
       {
         "type": "securestring",
         "displayName": "Admin Password",
-        "description": "The password of a local admin account that as well has sysadmin permissions for the local SQL Server instance. In DTL this is typically the admin user you specify for machine creation.",
+        "description": "The password for the Admin Username.",
         "allowEmpty": false,
         "controlType": "passwordBox"
       }
