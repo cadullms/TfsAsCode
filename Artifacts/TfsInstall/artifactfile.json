@@ -21,7 +21,7 @@
       {
         "type": "string",
         "displayName": "Admin Username",
-        "description": "The username (with mandatory domain: <domain>\\<username>, for local accounts use . or machine name as domain) of a local admin account that as well has sysadmin permissions for the local SQL Server instance. In DevTest Labs this is typically the admin user you specify at machine creation (e.g. '.\\vmuser').",
+        "description": "The username (with mandatory domain: 'domain\\username', for local accounts use . or machine name as domain) of a local admin account that as well has sysadmin permissions for the local SQL Server instance. In DevTest Labs this is typically the admin user you specify at machine creation (e.g. '.\\vmuser').",
         "allowEmpty": false
       },
       "adminPassword":

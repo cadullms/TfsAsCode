@@ -47,7 +47,7 @@
       {
         "type": "string",
         "displayName": "TFS Username",
-        "description": "The username (with mandatory domain: <domain>\\<username>, for local accounts use . or machine name as domain) of an account that can log on to this machine and that has permissions in TFS to create a team project. In DevTest Labs this is typically the admin user you specify for machine creation (e.g. '.\\vmuser').",
+        "description": "The username (with mandatory domain: 'domain\\username', for local accounts use . or machine name as domain) of an account that can log on to this machine and that has permissions in TFS to create a team project. In DevTest Labs this is typically the admin user you specify for machine creation (e.g. '.\\vmuser').",
         "allowEmpty": false
       },
       "tfsPassword":
