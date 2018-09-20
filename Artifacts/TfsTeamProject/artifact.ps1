@@ -53,7 +53,6 @@ $body = "{
   }
 }"
 
-
 $content = ExecRest -url "$tpcUrl/_apis/projects?api-version=2.0" -method "POST" -Body $body -ContentType "application/json"
 $projectState = $content.status
 
