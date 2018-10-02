@@ -158,6 +158,11 @@ function Download-AgentPackage
             {
                 $agent = $agentList.value[0]
             }
+            else
+            {
+                Write-Error "We tried to get an array of agent download links from $agentUrl but got: $agentList."
+            }
+            
             Invoke-WebRequest -Uri $agent.downloadUrl -Headers $headers -Method Get -OutFile "$agentPackagePath" | Out-Null
             break
         }
