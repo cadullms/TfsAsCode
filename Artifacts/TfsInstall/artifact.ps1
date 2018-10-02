@@ -1,6 +1,5 @@
 Param(
     [Parameter(Mandatory = $true)]
-    [ValidateSet("2015")] 
     [String] $version,
     [Parameter(Mandatory=$true)]
     [String] $adminUsername,
@@ -68,7 +67,7 @@ function InstallTfs($installationFolder)
 
     if ($retCode.ExitCode -ne 0 -and $retCode.ExitCode -ne 3010)
     {
-        if ($version -eq '2017')
+        if ($version.startsWith('2017'))
         {
             $targetLogs = 'c:\VS2017Logs'
             New-Item -ItemType Directory -Force -Path $targetLogs | Out-Null
@@ -164,7 +163,7 @@ elseif ($version -eq '2017 Update 3') {
 }
 else
 {
-    Write-Error "Version is not recognized - allowed value is 2015. Specified value: $version"
+    Write-Error "Version is not recognized - allowed values are '2015 Update 4.1', '2017 Update 3'. Specified value: $version"
 }
 
 # TODO: Find these paths dynamically with 
