@@ -14,7 +14,8 @@
         "displayName": "Version",
         "description": "The Team Foundation Server Version",
         "allowedValues": [
-          "2015"
+          "2015 Update 4.1",
+          "2017 Update 3"
         ]
       },
       "adminUsername":

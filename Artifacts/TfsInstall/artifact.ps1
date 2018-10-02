@@ -151,11 +151,16 @@ if ($adminUsername -notmatch ".+\\.+")
 Write-Output "Installing Team Foundation Server $version"
 $installationFolder = Join-path -path $env:ProgramData -childPath "DTLArt_TFS"
 
-if ($version -eq '2015' )
+if ($version -eq '2015 Update 4.1' )
 {
     $tfsInstallLog = Join-Path $installationFolder "TFSInstall.log"
     $argumentList = "/Quiet /Log $tfsInstallLog"
-    $downloadUrl = 'https://go.microsoft.com/fwlink/?LinkId=844068' #should be 2015 Update 4.1
+    $downloadUrl = 'https://go.microsoft.com/fwlink/?LinkId=844068' 
+}
+elseif ($version -eq '2017 Update 3') {
+    $tfsInstallLog = Join-Path $installationFolder "TFSInstall.log"
+    $argumentList = "/Quiet /Log $tfsInstallLog"
+    $downloadUrl = 'https://go.microsoft.com/fwlink/?LinkId=857134' 
 }
 else
 {
