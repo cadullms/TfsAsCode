@@ -328,10 +328,11 @@ function Remove-Agent
     try
     {
         pushd -Path $InstallPath
-
+        
+        $agentConfigPath = Join-Path $InstallPath "config.cmd"
         $agentUninstallArgs = "--unattended", "remove", "--auth", "PAT", "--token", $pat
 
-        & "config.cmd" $agentUninstallArgs
+        & $agentConfigPath $agentUninstallArgs
     }
     finally 
     {
