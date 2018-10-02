@@ -330,9 +330,13 @@ function Remove-Agent
         pushd -Path $InstallPath
         
         $agentConfigPath = Join-Path $InstallPath "config.cmd"
-        $agentUninstallArgs = "--unattended", "remove", "--auth", "PAT", "--token", $pat
+        $agentUninstallArgs = "remove", "--auth", "PAT", "--token", $pat
 
         & $agentConfigPath $agentUninstallArgs
+        if ($LASTEXITCODE -ne 0)
+        {
+            Write-Error "Agent removal failed with exit code: $LASTEXITCODE"
+        }
     }
     finally 
     {
@@ -414,6 +418,7 @@ try
     Write-Output 'Checking for previously configured agent'
     if (Test-AgentExists -InstallPath $agentInstallPath -AgentName $agentName)
     {
+        Write-Output 'Removing previously configured agent'
         Remove-Agent -InstallPath $agentInstallPath -pat $pat
     }
 
