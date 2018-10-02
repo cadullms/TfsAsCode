@@ -337,6 +337,7 @@ function Remove-Agent
         {
             Write-Error "Agent removal failed with exit code: $LASTEXITCODE"
         }
+        Remove-Item -Recurse -Force "$InstallPath\*"
     }
     finally 
     {
