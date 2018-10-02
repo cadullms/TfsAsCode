@@ -154,22 +154,21 @@ if ($version -eq '2015 Update 4.1' )
 {
     $tfsInstallLog = Join-Path $installationFolder "TFSInstall.log"
     $argumentList = "/Quiet /Log $tfsInstallLog"
-    $downloadUrl = 'https://go.microsoft.com/fwlink/?LinkId=844068' 
+    $downloadUrl = 'https://go.microsoft.com/fwlink/?LinkId=844068'
+    $TfsToolsDir = "C:\Program Files\Microsoft Team Foundation Server 14.0\Tools"
+    $TfsWebConfigPath = "C:\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\web.config"
 }
 elseif ($version -eq '2017 Update 3') {
     $tfsInstallLog = Join-Path $installationFolder "TFSInstall.log"
     $argumentList = "/Quiet /Log $tfsInstallLog"
     $downloadUrl = 'https://go.microsoft.com/fwlink/?LinkId=857134' 
+    $TfsToolsDir = "C:\Program Files\Microsoft Team Foundation Server 15.0\Tools"
+    $TfsWebConfigPath = "C:\Program Files\Microsoft Team Foundation Server 15.0\Application Tier\Web Services\web.config"
 }
 else
 {
     Write-Error "Version is not recognized - allowed values are '2015 Update 4.1', '2017 Update 3'. Specified value: $version"
 }
-
-# TODO: Find these paths dynamically with 
-# (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\TeamFoundationServer\14.0" -Name "InstallPath").InstallPath
-$TfsToolsDir = "C:\Program Files\Microsoft Team Foundation Server 14.0\Tools"
-$TfsWebConfigPath = "C:\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\web.config"
 
 if (Test-Path $TfsToolsDir)    
 {
