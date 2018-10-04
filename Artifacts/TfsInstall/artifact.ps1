@@ -165,9 +165,16 @@ elseif ($version -eq '2017 Update 3') {
     $TfsToolsDir = "C:\Program Files\Microsoft Team Foundation Server 15.0\Tools"
     $TfsWebConfigPath = "C:\Program Files\Microsoft Team Foundation Server 15.0\Application Tier\Web Services\web.config"
 }
+elseif ($version -eq '2018 Update 3') {
+    $tfsInstallLog = Join-Path $installationFolder "TFSInstall.log"
+    $argumentList = "/Quiet /Log $tfsInstallLog"
+    $downloadUrl = 'https://go.microsoft.com/fwlink/?LinkId=2008534' 
+    $TfsToolsDir = "C:\Program Files\Microsoft Team Foundation Server 2018\Tools"
+    $TfsWebConfigPath = "C:\Program Files\Microsoft Team Foundation Server 2018\Application Tier\Web Services\web.config"
+}
 else
 {
-    Write-Error "Version is not recognized - allowed values are '2015 Update 4.1', '2017 Update 3'. Specified value: $version"
+    Write-Error "Version is not recognized - allowed values are '2015 Update 4.1', '2017 Update 3' and '2018 Update 3'. Specified value: $version"
 }
 
 if (Test-Path $TfsToolsDir)    
