@@ -131,7 +131,7 @@ function ConfigureTfs ($TfsToolsDir, $installationFolder)
     Write-Output "On failure, logs will be saved at C:\ProgramData\Microsoft\Team Foundation\Server Configuration\Logs"
 
     # https://blogs.msdn.microsoft.com/devops/2012/10/12/unattended-installation-of-team-foundation-server-20122013/
-    $argumentList = "unattend /create /type:STANDARD /unattendfile:$installationFolder\standard.ini /inputs:StartTrial=false;IsServiceAccountBuiltIn=True;UseReporting=False;UseWss=False"
+    $argumentList = "unattend /create /type:STANDARD /unattendfile:$installationFolder\standard.ini $tfsUnattendInputs"
     ExecProcess -toolPath $tfsconfigToolPath -argumentList $argumentList
     
     $argumentList = "unattend /configure /unattendfile:$installationFolder\standard.ini /continue"
@@ -157,6 +157,7 @@ if ($version -eq '2015 Update 4.1' )
     $downloadUrl = 'https://go.microsoft.com/fwlink/?LinkId=844068'
     $TfsToolsDir = "C:\Program Files\Microsoft Team Foundation Server 14.0\Tools"
     $TfsWebConfigPath = "C:\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\web.config"
+    $tfsUnattendInputs = "/inputs:StartTrial=false;IsServiceAccountBuiltIn=True;UseReporting=False;UseWss=False"
 }
 elseif ($version -eq '2017 Update 3') {
     $tfsInstallLog = Join-Path $installationFolder "TFSInstall.log"
@@ -164,6 +165,7 @@ elseif ($version -eq '2017 Update 3') {
     $downloadUrl = 'https://go.microsoft.com/fwlink/?LinkId=857134' 
     $TfsToolsDir = "C:\Program Files\Microsoft Team Foundation Server 15.0\Tools"
     $TfsWebConfigPath = "C:\Program Files\Microsoft Team Foundation Server 15.0\Application Tier\Web Services\web.config"
+    $tfsUnattendInputs = "/inputs:StartTrial=false;IsServiceAccountBuiltIn=True;UseReporting=False;UseWss=False"
 }
 elseif ($version -eq '2018 Update 3') {
     $tfsInstallLog = Join-Path $installationFolder "TFSInstall.log"
@@ -171,6 +173,7 @@ elseif ($version -eq '2018 Update 3') {
     $downloadUrl = 'https://go.microsoft.com/fwlink/?LinkId=2008534' 
     $TfsToolsDir = "C:\Program Files\Microsoft Team Foundation Server 2018\Tools"
     $TfsWebConfigPath = "C:\Program Files\Microsoft Team Foundation Server 2018\Application Tier\Web Services\web.config"
+    $tfsUnattendInputs = "/inputs:StartTrial=false;IsServiceAccountBuiltIn=True;UseReporting=False"
 }
 else
 {
