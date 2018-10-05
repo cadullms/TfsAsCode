@@ -33,9 +33,17 @@
         "description": "The password for the Admin Username.",
         "allowEmpty": false,
         "controlType": "passwordBox"
+      },
+      "enableBasicAuthentication":
+      {
+        "type": "bool",
+        "displayName": "Enable Basic Authentication",
+        "description": "If set, the Basic Authentication feature will be installed (if missing) and Basic Authentication will be enabled for the Team Foundation Server site.",
+        "allowEmpty": false,
+        "defaultValue": false
       }
     },
     "runCommand": {
-      "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./artifact-main.ps1 -version ''', parameters('version'), '''', ' -adminUsername ''', parameters('adminUsername'), '''', ' -adminPassword ''', parameters('adminPassword'), '''','\"')]"
+      "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./artifact-main.ps1 -version ''', parameters('version'), '''', ' -adminUsername ''', parameters('adminUsername'), '''', ' -adminPassword ''', parameters('adminPassword'), '''',' -enableBasicAuthentication ''', parameters('enableBasicAuthentication'), '''','\"')]"
     }
 }

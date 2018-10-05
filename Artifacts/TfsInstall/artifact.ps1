@@ -4,7 +4,8 @@ Param(
     [Parameter(Mandatory=$true)]
     [String] $adminUsername,
     [Parameter(Mandatory=$true)]
-    [String] $adminPassword #TODO: I got this from https://github.com/Azure/azure-devtestlab/blob/2a670c730def9fd63b0a7c6fda9301b473b04e92/Artifacts/windows-vsts-build-agent/vsts-agent-install.ps1, but it would be better to find an option with end-to-end-encryption
+    [String] $adminPassword, #TODO: I got this from https://github.com/Azure/azure-devtestlab/blob/2a670c730def9fd63b0a7c6fda9301b473b04e92/Artifacts/windows-vsts-build-agent/vsts-agent-install.ps1, but it would be better to find an option with end-to-end-encryption
+    [bool] $enableBasicAuthentication=$false
 )
 
 function DownloadToFilePath ($downloadUrl, $targetFile)
@@ -196,4 +197,14 @@ if (Test-Path $TfsWebConfigPath)
 else
 {
     ConfigureTfs -TfsToolsDir $TfsToolsDir -installationFolder $installationFolder
+}
+
+if ($enableBasicAuthentication)
+{
+    if ((Get-WindowsFeature Web-Basic-Auth).InstallState -ne "Installed")
+    {
+        Install-WindowsFeature Web-Basic-Auth
+    }
+
+    Set-WebConfigurationProperty -Filter "/system.webServer/security/authentication/basicAuthentication" -Name "Enabled" -Value "True" -PSPath "IIS:`\" -Location "Team Foundation Server/tfs"
 }
