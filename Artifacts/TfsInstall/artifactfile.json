@@ -43,6 +43,6 @@
       }
     },
     "runCommand": {
-      "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./artifact-main.ps1 -version ''', parameters('version'), '''', ' -adminUsername ''', parameters('adminUsername'), '''', ' -adminPassword ''', parameters('adminPassword'), '''',' -enableBasicAuthentication $''', parameters('enableBasicAuthentication'), '''','\"')]"
+      "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./artifact-main.ps1 -version ''', parameters('version'), '''', ' -adminUsername ''', parameters('adminUsername'), '''', ' -adminPassword ''', parameters('adminPassword'), '''',' -enableBasicAuthentication $', parameters('enableBasicAuthentication'), '\"')]"
     }
 }
