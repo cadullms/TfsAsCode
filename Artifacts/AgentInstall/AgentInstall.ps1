@@ -378,11 +378,16 @@ function Install-Agent
         {
             $agentConfigArgs += "--windowslogonpassword", $Config.WindowsLogonPassword
         }
+
         if (-not [string]::IsNullOrWhiteSpace($Config.WorkDirectory))
         {
             $agentConfigArgs += "--work", $Config.WorkDirectory
         }
+
+        $agentConfigArgs += "--replace"
+
         & $Config.AgentExePath $agentConfigArgs
+        
         if ($LASTEXITCODE -ne 0)
         {
             Write-Error "Agent configuration failed with exit code: $LASTEXITCODE"
