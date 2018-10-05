@@ -39,7 +39,6 @@
         "type": "bool",
         "displayName": "Enable Basic Authentication",
         "description": "If set, the Basic Authentication feature will be installed (if missing) and Basic Authentication will be enabled for the Team Foundation Server site.",
-        "allowEmpty": false,
         "defaultValue": false
       }
     },
