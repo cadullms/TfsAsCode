@@ -139,6 +139,19 @@ function ConfigureTfs ($TfsToolsDir, $installationFolder)
     Write-Output "Configured Team Foundation Server $version."
 }
 
+function EnableBasicAuthForTfs()
+{
+    if ((Get-WindowsFeature Web-Basic-Auth).InstallState -ne "Installed")
+    {
+        Write-Output "Basic Authentication feature for IIS is not installed. Installing it now."
+        Install-WindowsFeature Web-Basic-Auth | Out-Null
+    }
+
+    Write-Output "Enabling basic authentication for Team Foundation Server site."
+    Set-WebConfigurationProperty -Filter "/system.webServer/security/authentication/basicAuthentication" -Name "Enabled" -Value "True" -PSPath "IIS:`\" -Location "Team Foundation Server/tfs"
+    Write-Output "Successfully enabled basic authentication."
+}
+
 # ============ this is our entry point ==================
 
 if ($adminUsername -notmatch ".+\\.+") 
@@ -199,10 +212,7 @@ else
 
 if ($enableBasicAuthentication)
 {
-    if ((Get-WindowsFeature Web-Basic-Auth).InstallState -ne "Installed")
-    {
-        Install-WindowsFeature Web-Basic-Auth
-    }
-
-    Set-WebConfigurationProperty -Filter "/system.webServer/security/authentication/basicAuthentication" -Name "Enabled" -Value "True" -PSPath "IIS:`\" -Location "Team Foundation Server/tfs"
+    EnableBasicAuthForTfs
 }
+
+Write-Output "Done."
