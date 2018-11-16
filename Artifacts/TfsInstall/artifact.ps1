@@ -179,7 +179,7 @@ elseif ($version -eq '2017 Update 3') {
     $TfsWebConfigPath = "C:\Program Files\Microsoft Team Foundation Server 15.0\Application Tier\Web Services\web.config"
     $tfsUnattendInputs = "/inputs:StartTrial=false;IsServiceAccountBuiltIn=True;UseReporting=False;UseWss=False"
 }
-elseif ($version -eq '2018 Update 3') {
+elseif ($version -eq '2018 Update 3.1') {
     $tfsInstallLog = Join-Path $installationFolder "TFSInstall.log"
     $argumentList = "/Quiet /Log $tfsInstallLog"
     $downloadUrl = 'https://go.microsoft.com/fwlink/?LinkId=2008534' 
